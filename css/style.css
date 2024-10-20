@@ -9,15 +9,101 @@
     src: url(./../assets/typos/minecraft/Minecraft.ttf);
 }
 
+html{
+    background-color: var(--verdePrincipal);
+}
+
+body{
+    position: relative;
+}
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: minecraft;
 }
-.container{
+
+
+/* Container1 */
+
+.intro, .configuracion, .juego {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     background-color: var(--verdePrincipal);
+}
+
+.intro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 2s ease;
+    z-index: 10;
+
+
+    .img_principal{
+        width: 50px;
+        border: 1px solid black;
+        transition: transform 3s ease; /* Transición suave */
+    }
+}
+
+.configuracion {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 5;
+    padding: 100px;
+    transition: opacity 2s ease; /* Transición suave */
+
+    .title{
+        font-size: 7rem;
+        letter-spacing: 0.7rem;
+    }
+
+    .ajustes{
+        font-size: 3rem;
+        letter-spacing: 0.4rem;
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        border: 7px solid var(--grisSecundario);
+        padding: 30px;
+    }
+
+    .ajuste{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+    }
+    .ajuste button{
+        font-size: 2.2rem;
+        padding: 10px;
+        border-radius: 100%;
+        border: 3px solid var(--grisSecundario);
+        background-color: var(--verdePrincipal);
+    }
+
+    .ajuste_sonido{
+        margin-right: 19px;
+    }
+    
+    .playButton {
+        width: 80%;
+        font-size: 2rem;
+        background-color: var(--verdePrincipal);
+        border: 3px solid var(--grisSecundario);
+        padding: 10px 0;
+    }
+}
+
+.juego{
     display: grid;
     grid-gap: 10px;
     justify-items: center;
@@ -25,6 +111,7 @@
     grid-template-columns: 500px 1fr;
     grid-template-areas: 
     "logo tablero";
+    z-index: 0 ;
 }
 .logo{
     width: 500px;
@@ -89,7 +176,7 @@
     background-color: var(--verdePrincipalTransparente);
     position: absolute;
     top: 0;
-    z-index: 15;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;

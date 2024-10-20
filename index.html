@@ -7,10 +7,45 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <div class="container" id="container">
+    <section class="intro" id="intro">
+        <img src="./assets/images/logotipo.webp" alt="" class="img_principal" id="img_principal">
+    </section>
+
+
+    <section class="configuracion" id="configuracion">
+        <h1 class="title">Ajustes</h1>
+
+        <div class="ajustes" id="ajustes">
+            <article class="ajuste ajuste_sonido" id="ajuste_sonido">
+                <h2>Sound ·········</h2>
+                <div class="opcionesAjuste">
+                    <button>On</button>
+                    <button>Off</button>
+                </div>
+            </article>
+            <article class="ajuste ajuste_muros" id="ajuste_muros">
+                <h2>Walls ·········</h2>
+                <div class="opcionesAjuste">
+                    <button>On</button>
+                    <button>Off</button>
+                </div>
+            </article>
+            <article class="ajuste ajuste_alimento" id="ajuste_alimento">
+                <h2>Feed ·········</h2>
+                <div class="opcionesAjuste">
+                    <button>On</button>
+                    <button>Off</button>
+                </div>
+            </article>
+            <button class="playButton" id="playButton">PLAY</button>
+        </div>
+    </section>
+
+
+    <section class="juego" id="juego">
         <img src="./assets/images/logotipo.webp" alt="" class="logo">
        
-        <main class="tablero" id="tablero">
+        <section class="tablero" id="tablero">
             <div class="contTablero" id="contTablero">
                 <div class="alimento" id="alimento"></div>
                 <!-- Aqui se insertan el cuerpo de la serpiente -->
@@ -23,8 +58,8 @@
                 <p>Score: <span class="score" id="score"></span></p>
             </div>
             <div class="alert" id="alert">Press Space Button</div>
-        </main>
-    </div>
+        </sect>
+    </section>
     <script src="./js/script.js"></script>
 </body>
 </html>

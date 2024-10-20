@@ -1,4 +1,12 @@
-//Elements
+let intro = document.getElementById("intro");
+let configuracion = document.getElementById("configuracion");
+let juego = document.getElementById("juego");
+
+//container1
+let img_principal = document.getElementById("img_principal");
+let playButton = document.getElementById("playButton");
+
+//container2
 let tablero = document.getElementById("tablero");
 let contTablero = document.getElementById("contTablero");
 let alimento = document.getElementById("alimento");
@@ -70,7 +78,7 @@ const borrarSerpiente = () => {
 //Funcion para mover la serpiente
 const mover = (teclaPulsada) => {
 
-    
+
 
     //Creamos un array con cada uno de los cuadrados que forman el cuerpo de la serpiente
     celulas = [...contTablero.children].slice(1);
@@ -93,7 +101,7 @@ const mover = (teclaPulsada) => {
             startColumn -= 1;
             endColumn -= 1;
         break;
-        case "ArrowUp": 
+        case "ArrowUp":
             startRow -= 1;
             endRow -= 1;
         break;
@@ -102,7 +110,7 @@ const mover = (teclaPulsada) => {
             endRow += 1;
         break;
     }
-    
+
     //Damos la nueva posicion a cada cuadrado con el array de estilos
     for (let i = 0; i < celulas.length; i++) {
         if(i == 0){
@@ -110,41 +118,23 @@ const mover = (teclaPulsada) => {
         }else{
             celulas[i].style.gridArea = arrayEstilos[i-1];
         }
-    }   
+    }
 
-    
+
     comprobarComida();
-    //comprobrarChoque();
+    comprobrarChoque();
     comprobarLimites();
     comprobarRecord();
 
- 
     //Vaciamos el array
     arrayEstilos = [];
 }
-
-//Hay veces que en el array de teclas pulsadas entra un movimiento que no llega a realizarse, 
-//ya que antes de que llegue al timer, ya ha entrado otro que le ha sustituido. Esto hace que la serpiente
-//pueda volver sobre si misma. Vamos a corregir esto con la siguiente funcion.
-// const corregirErrorSolapamiento = () => {
-//     if(arrayEstilos[0] == arrayEstilos[2]){
-//         if(teclasPulsadas[teclasPulsadas.length - 3] == "ArrowRight"){
-//             if(teclasPulsadas[teclasPulsadas.length - 2] == "ArrowUp"){
-//                 if (teclasPulsadas[teclasPulsadas.length - 1] == "ArrowLeft") {
-//                     celulas[0].style.gridRowStart -=1;
-//                     celulas[0].style.gridRowEnd -=1;
-//                 }
-//             }else if(teclasPulsadas(teclasPulsadas.length - 2) == "ArrowDown"){
-
-//             }
-//         }
-//     }
-// }
 
 //Comprobar choque con bordes
 const comprobarLimites= () => {
     if(celulas[0].style.gridRowEnd > 31 || celulas[0].style.gridColumnEnd > 60){
         resetear();
+        console.log("opcion1");
     }
     if(arrayEstilos[0] == arrayEstilos[1] && (celulas[0].style.gridRowStart == 1 || celulas[0].style.gridColumnEnd == 1)){
         resetear();
@@ -170,16 +160,16 @@ const comprobrarChoque = () => {
 }
 
 const resetear = () => {
+    console.log("opcion2");
     cambiarAlerta();
     borrarSerpiente();
     teclasPulsadas = ["ArrowRight"];
     longitudSnake = 10;
     contadorPulsaciones=0;
     contadorVecesComida = 0;
-    puntuacion.textContent = ("00" + contadorVecesComida);   
+    puntuacion.textContent = ("00" + contadorVecesComida);
     crearSerpiente();
-    cambiarAlerta();
-}
+   }
 
 //funcion para comprobar si he comido
 const comprobarComida = () => {
@@ -202,10 +192,10 @@ const aumentarSerpiente = () => {
 
 //Funcion para validar movimientos
 const validaMovimiento = (teclapulsada) => {
-    
+
 
     //Validamos que la flecha se puede pulsar
-    //Por ejemplo si estamos yendo a la derecha, no se puede ir hacia la 
+    //Por ejemplo si estamos yendo a la derecha, no se puede ir hacia la
     //izquierda directamente. Tendrias que ir arriba o abajo primero.
     if(teclapulsada == "ArrowRight" && (teclasPulsadas.slice(-1) == "ArrowUp" || teclasPulsadas.slice(-1) == "ArrowDown")){
         teclasPulsadas.push(teclapulsada);
@@ -226,23 +216,21 @@ const validaMovimiento = (teclapulsada) => {
 
 //Metodo que inicia el juego al pulsar cualquier tecla
 const jugar = (event) => {
-    
+
     if (event.keyCode == 32) {
         contadorPulsaciones++;
         cambiarAlerta();
     }
 
-    if(play){
-        
+    
+
         validaMovimiento(event.code);
 
         if (contadorPulsaciones == 1 && event.keyCode == 32) {
             //El intervalo comienza con la primera pulsación y cada vez que se refresque se actualiza con la ultima tecla tocada
             timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), 100);
-            
         }
-    }
-    
+
 }
 
 
@@ -255,26 +243,37 @@ const moverAlimento = () => {
     endAliColumn = startAliColumn - 1;
     posAlimento = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
 
-    
+
         alimento.style.gridArea = posAlimento;
-    }while(celulas.some((celula) => celula.style.gridArea == posAlimento)){
+    }while(celulas.some((celula) => posAlimento == celula.style.gridArea)){
     }
 }
 
 
-const cambiarAlerta = (event) => {
+const cambiarAlerta = () => {
         let tiene = alert.classList.toggle("desaparecer");
         if (!tiene) {
             clearInterval(timer);
-            console.log("adios");
-            contadorPulsaciones = 0; 
-            play = false;
+            contadorPulsaciones = 0;
         }else{
-            play = true;
-        console.log("hola")}
-        
+        }
+
 }
 
 
+const efectosIniciales = () => {
+    img_principal.style.transform = "scale(23)";  // En tres segundos desde el dom la imagen aumenta
+    setTimeout(() => {intro.style.opacity = "0"}, 4500); // En 4,5 segundos desde el dom la imagen se empieza a desvaneces
+    setTimeout(() => {intro.style.display = "none"}, 6500);
+}
+
+const mostrarPantallaJuego = () => {
+    configuracion.style.opacity = "0";
+    setTimeout(() => {configuracion.style.display = "none"}, 2000);
+}
+
+
+document.addEventListener("DOMContentLoaded", efectosIniciales);
 document.addEventListener("DOMContentLoaded", crearSerpiente);
+playButton.addEventListener("click", mostrarPantallaJuego);
 document.addEventListener("keydown", jugar);
