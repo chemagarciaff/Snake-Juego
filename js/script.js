@@ -9,10 +9,11 @@ let playButton = document.getElementById("playButton");
 //container2
 let tablero = document.getElementById("tablero");
 let contTablero = document.getElementById("contTablero");
-let alimento = document.getElementById("alimento");
 let puntuacion = document.getElementById("puntuacion");
 let score = document.getElementById("score");
 let alert = document.getElementById("alert");
+
+let maxAlimentoInput = document.getElementById("maxAlimentoInput");
 
 //Variables
 let startColumn = 35;
@@ -35,12 +36,13 @@ let teclasPulsadas = ["ArrowRight"];
 let teclaPulsada;
 let timer;
 let celulas;
+let alimentos;
+let numAlimentos;
 let arrayEstilos = [];
 
 let play = false;
 
 
-alimento.style.gridArea = posInicialAlimento;
 puntuacion.textContent = ("00" + contadorVecesComida);
 score.textContent = "000";
 //Funciones
@@ -81,7 +83,8 @@ const mover = (teclaPulsada) => {
 
 
     //Creamos un array con cada uno de los cuadrados que forman el cuerpo de la serpiente
-    celulas = [...contTablero.children].slice(1);
+    celulas = [...contTablero.children].slice(numAlimentos);
+    console.log(celulas);
 
     //Guardamos los estilos de cada uno de los cuadrados en un array para usarlos luego
     celulas.forEach(celula => {
@@ -134,7 +137,6 @@ const mover = (teclaPulsada) => {
 const comprobarLimites= () => {
     if(celulas[0].style.gridRowEnd > 31 || celulas[0].style.gridColumnEnd > 60){
         resetear();
-        console.log("opcion1");
     }
     if(arrayEstilos[0] == arrayEstilos[1] && (celulas[0].style.gridRowStart == 1 || celulas[0].style.gridColumnEnd == 1)){
         resetear();
@@ -160,7 +162,6 @@ const comprobrarChoque = () => {
 }
 
 const resetear = () => {
-    console.log("opcion2");
     cambiarAlerta();
     borrarSerpiente();
     teclasPulsadas = ["ArrowRight"];
@@ -174,12 +175,15 @@ const resetear = () => {
 //funcion para comprobar si he comido
 const comprobarComida = () => {
     //Comprobamos que la cabeza de la serpiente esta en la misma posicion que el alimento
-    if (alimento.style.gridArea == celulas[0].style.gridArea) {
-        contadorVecesComida++;
-        puntuacion.textContent = ("00"+contadorVecesComida).slice(-3);
-        moverAlimento();
-        aumentarSerpiente();
-    }
+    alimentos.forEach((alimento) => {
+        
+        if (alimento.style.gridArea == celulas[0].style.gridArea) {
+            contadorVecesComida++;
+            puntuacion.textContent = ("00"+contadorVecesComida).slice(-3);
+            moverAlimento(alimento);
+            aumentarSerpiente();
+        }
+    });
 }
 
 
@@ -235,18 +239,26 @@ const jugar = (event) => {
 
 
 
-const moverAlimento = () => {
-    do{
+const moverAlimento = (alimento) => {
+        
+        do{
+            startAliRow = Math.floor(Math.random()*31);
+            endAliRow = startAliRow + 1;
+            startAliColumn = Math.floor(Math.random()*60);
+            endAliColumn = startAliColumn - 1;
+            alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
+            
+        }while(celulas.some((celula) => posAlimento == celula.style.gridArea))
+    }
+
+
+
+const darPosicionAlimento = (alimento) => {
     startAliRow = Math.floor(Math.random()*31);
     endAliRow = startAliRow + 1;
     startAliColumn = Math.floor(Math.random()*60);
     endAliColumn = startAliColumn - 1;
-    posAlimento = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
-
-
-        alimento.style.gridArea = posAlimento;
-    }while(celulas.some((celula) => posAlimento == celula.style.gridArea)){
-    }
+    alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
 }
 
 
@@ -267,7 +279,25 @@ const efectosIniciales = () => {
     setTimeout(() => {intro.style.display = "none"}, 6500);
 }
 
+const generarAlimentos = () => {
+    numAlimentos = maxAlimentoInput.value;
+    let fragment = document.createDocumentFragment();
+    for (let i = 0; i < numAlimentos; i++) {
+        let alimento = document.createElement("DIV");
+        alimento.classList.add("alimento");
+        darPosicionAlimento(alimento);
+        fragment.appendChild(alimento); 
+    }
+    alimentos = [...fragment.children];
+    contTablero.insertBefore(fragment, contTablero.firstElementChild);
+}
+
+const cargarConfiguracion = () => {
+    generarAlimentos();
+}
+
 const mostrarPantallaJuego = () => {
+    cargarConfiguracion();
     configuracion.style.opacity = "0";
     setTimeout(() => {configuracion.style.display = "none"}, 2000);
 }
