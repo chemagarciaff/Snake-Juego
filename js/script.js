@@ -21,12 +21,6 @@ let endColumn = startColumn-1;
 let startRow = 23;
 let endRow = startRow+1;
 
-let posInicialAlimento = "11/31/12/30";
-let posAlimento;
-let startAliColumn;
-let endAliColumn;
-let startAliRow;
-let endAliRow;
 
 let longitudSnake = 10;
 let contadorPulsaciones = 0;
@@ -243,7 +237,7 @@ const moverAlimento = (alimento) => {
             endAliColumn = startAliColumn - 1;
             alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
             
-        }while(celulas.some((celula) => posAlimento == celula.style.gridArea))
+        }while(celulas.some((celula) => alimento.style.gridArea == celula.style.gridArea))
     }
 
 
@@ -275,7 +269,7 @@ const cambiarAlerta = () => {
 
 
 const efectosIniciales = () => {
-    img_principal.style.transform = "scale(23)";  // En tres segundos desde el dom la imagen aumenta
+    img_principal.style.transform = "scale(17)";  // En tres segundos desde el dom la imagen aumenta
     setTimeout(() => {intro.style.opacity = "0"}, 4500); // En 4,5 segundos desde el dom la imagen se empieza a desvaneces
     setTimeout(() => {intro.style.display = "none"}, 6500);
 }

@@ -51,6 +51,7 @@ body{
     }
 }
 
+
 .configuracion {
     display: flex;
     justify-content: space-around;
@@ -60,46 +61,72 @@ body{
     transition: opacity 2s ease; /* Transición suave */
 
     .title{
-        font-size: 7rem;
+        font-size: 5rem;
         letter-spacing: 0.7rem;
     }
 
     .ajustes{
-        font-size: 3rem;
+        font-size: 2rem;
         letter-spacing: 0.4rem;
         width: 50%;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: start;
         gap: 30px;
         border: 7px solid var(--grisSecundario);
         padding: 30px;
     }
 
     .ajuste{
+        width: 100%;
         display: flex;
-        justify-content: space-around;
+        justify-content: start;
         align-items: center;
-
+        
+        h2{
+            width: 70%;
+        }
     }
+
+    .opcionesAjuste{
+        width: 30%;
+        display: flex;
+        gap: 10px;
+        flex-wrap: nowrap;
+        justify-content: center;
+    }
+
+
     .ajuste button{
+        width: 80px;
+        height: 80px;
         font-size: 2.2rem;
-        padding: 10px;
         border-radius: 100%;
         border: 3px solid var(--grisSecundario);
         background-color: var(--verdePrincipal);
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
-
+    
     .ajuste_sonido{
         margin-right: 19px;
     }
     
     .playButton {
-        width: 80%;
+        width: 100%;
         font-size: 2rem;
         background-color: var(--verdePrincipal);
         border: 3px solid var(--grisSecundario);
         padding: 10px 0;
+    }
+    
+    .maxAlimentoInput{
+        font-size: 2.2rem;
+        width: 50px;
+        height: 50px;
+        background-color: var(--verdePrincipal);
+        outline: none;
     }
 }
 
