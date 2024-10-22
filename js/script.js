@@ -1,19 +1,23 @@
+
+//Intro
 let intro = document.getElementById("intro");
-let configuracion = document.getElementById("configuracion");
-let juego = document.getElementById("juego");
-
-//container1
 let img_principal = document.getElementById("img_principal");
-let playButton = document.getElementById("playButton");
 
-//container2
+
+//Configuration
+let configuracion = document.getElementById("configuracion");
+let playButton = document.getElementById("playButton");
+let maxAlimentoInput = document.getElementById("maxAlimentoInput");
+
+
+//Juego
+let juego = document.getElementById("juego");
 let tablero = document.getElementById("tablero");
 let contTablero = document.getElementById("contTablero");
 let puntuacion = document.getElementById("puntuacion");
 let score = document.getElementById("score");
 let alert = document.getElementById("alert");
 
-let maxAlimentoInput = document.getElementById("maxAlimentoInput");
 
 //Variables
 let startColumn = 35;
@@ -23,7 +27,6 @@ let endRow = startRow+1;
 
 
 let longitudSnake = 10;
-let contadorPulsaciones = 0;
 let contadorVecesComida = 0;
 
 let teclasPulsadas = ["ArrowRight"];
@@ -33,6 +36,7 @@ let celulas;
 let alimentos;
 let numAlimentos;
 let arrayEstilos = [];
+let velocidadSnake = 150;
 
 let play = false;
 let primeraJugada = false;
@@ -71,15 +75,11 @@ const borrarSerpiente = () => {
 }
 
 
-
 //Funcion para mover la serpiente
 const mover = (teclaPulsada) => {
 
-
-
     //Creamos un array con cada uno de los cuadrados que forman el cuerpo de la serpiente
     celulas = [...contTablero.children].slice(numAlimentos);
-    console.log(celulas);
 
     //Guardamos los estilos de cada uno de los cuadrados en un array para usarlos luego
     celulas.forEach(celula => {
@@ -118,15 +118,18 @@ const mover = (teclaPulsada) => {
         }
     }
 
-
+    
     comprobarComida();
     comprobrarChoque();
     comprobarLimites();
     comprobarRecord();
+    
+    
 
     //Vaciamos el array
     arrayEstilos = [];
 }
+
 
 //Comprobar choque con bordes
 const comprobarLimites= () => {
@@ -134,6 +137,7 @@ const comprobarLimites= () => {
         resetear();
     }
 }
+
 
 //Comprobar si se ha superado el score
 const comprobarRecord = () => {
@@ -153,16 +157,18 @@ const comprobrarChoque = () => {
     }
 }
 
+
 const resetear = () => {
     cambiarAlerta();
     borrarSerpiente();
     teclasPulsadas = ["ArrowRight"];
     longitudSnake = 10;
-    contadorPulsaciones=0;
     contadorVecesComida = 0;
+    velocidadSnake = 150;
     puntuacion.textContent = ("00" + contadorVecesComida);
     crearSerpiente();
-   }
+}
+
 
 //funcion para comprobar si he comido
 const comprobarComida = () => {
@@ -171,11 +177,21 @@ const comprobarComida = () => {
         
         if (alimento.style.gridArea == celulas[0].style.gridArea) {
             contadorVecesComida++;
+            aumentarVelocidad();
             puntuacion.textContent = ("00"+contadorVecesComida).slice(-3);
             moverAlimento(alimento);
             aumentarSerpiente();
         }
     });
+}
+
+
+const aumentarVelocidad = () => {
+    if(contadorVecesComida % 5 == 0){
+        clearInterval(timer);
+        velocidadSnake -= 10;
+        timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), velocidadSnake);
+    }
 }
 
 
@@ -185,6 +201,7 @@ const aumentarSerpiente = () => {
     celulaNueva.style.gridArea = celulas[celulas.length-1].style.gridArea;
     contTablero.appendChild(celulaNueva);
 }
+
 
 //Funcion para validar movimientos
 const validaMovimiento = (teclapulsada) => {
@@ -216,10 +233,8 @@ const jugar = (event) => {
     if(play){
         validaMovimiento(event.key);
         if(primeraJugada){
-
-
             //El intervalo comienza con la primera pulsación y cada vez que se refresque se actualiza con la ultima tecla tocada
-            timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), 100);
+            timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), velocidadSnake);
             primeraJugada = false;
         }
     }
@@ -227,34 +242,36 @@ const jugar = (event) => {
 }
 
 
-
 const moverAlimento = (alimento) => {
+    do{
+        startAliRow = Math.floor(Math.random()*31);
+        endAliRow = startAliRow + 1;
+        startAliColumn = Math.floor(Math.random()*60);
+        endAliColumn = startAliColumn - 1;
+        alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
         
-        do{
-            startAliRow = Math.floor(Math.random()*31);
-            endAliRow = startAliRow + 1;
-            startAliColumn = Math.floor(Math.random()*60);
-            endAliColumn = startAliColumn - 1;
-            alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
-            
-        }while(celulas.some((celula) => alimento.style.gridArea == celula.style.gridArea))
-    }
-
+    }while(celulas.some((celula) => alimento.style.gridArea == celula.style.gridArea) || alimento.style.gridArea == 0 / 0 / 0 / 0)
+}
 
 
 const darPosicionAlimento = (alimento) => {
-    startAliRow = Math.floor(Math.random()*31);
-    endAliRow = startAliRow + 1;
-    startAliColumn = Math.floor(Math.random()*60);
-    endAliColumn = startAliColumn - 1;
-    alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
+    do{
+        startAliRow = Math.floor(Math.random()*31);
+        endAliRow = startAliRow + 1;
+        startAliColumn = Math.floor(Math.random()*60);
+        endAliColumn = startAliColumn - 1;
+        alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
+    }while(alimento.style.gridArea == 0 / 0 / 0 / 0)
+    
 }
+
 
 const cambiarAlertaManual = (event) => {
     if (event.keyCode == 32) {
         cambiarAlerta();
     }
 }
+
 
 const cambiarAlerta = () => {
         let tiene = alert.classList.toggle("desaparecer");
