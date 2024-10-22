@@ -41,6 +41,7 @@ let numAlimentos;
 let arrayEstilos = [];
 
 let play = false;
+let primeraJugada = false;
 
 
 puntuacion.textContent = ("00" + contadorVecesComida);
@@ -138,9 +139,6 @@ const comprobarLimites= () => {
     if(celulas[0].style.gridRowEnd > 31 || celulas[0].style.gridColumnEnd > 60){
         resetear();
     }
-    if(arrayEstilos[0] == arrayEstilos[1] && (celulas[0].style.gridRowStart == 1 || celulas[0].style.gridColumnEnd == 1)){
-        resetear();
-    }
 }
 
 //Comprobar si se ha superado el score
@@ -221,19 +219,16 @@ const validaMovimiento = (teclapulsada) => {
 //Metodo que inicia el juego al pulsar cualquier tecla
 const jugar = (event) => {
 
-    if (event.keyCode == 32) {
-        contadorPulsaciones++;
-        cambiarAlerta();
-    }
+    if(play){
+        validaMovimiento(event.key);
+        if(primeraJugada){
 
-    
 
-        validaMovimiento(event.code);
-
-        if (contadorPulsaciones == 1 && event.keyCode == 32) {
             //El intervalo comienza con la primera pulsación y cada vez que se refresque se actualiza con la ultima tecla tocada
             timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), 100);
+            primeraJugada = false;
         }
+    }
 
 }
 
@@ -261,13 +256,19 @@ const darPosicionAlimento = (alimento) => {
     alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
 }
 
+const cambiarAlertaManual = (event) => {
+    if (event.keyCode == 32) {
+        cambiarAlerta();
+    }
+}
 
 const cambiarAlerta = () => {
         let tiene = alert.classList.toggle("desaparecer");
         if (!tiene) {
             clearInterval(timer);
-            contadorPulsaciones = 0;
+            primeraJugada = false;
         }else{
+            primeraJugada = true;
         }
 
 }
@@ -300,10 +301,12 @@ const mostrarPantallaJuego = () => {
     cargarConfiguracion();
     configuracion.style.opacity = "0";
     setTimeout(() => {configuracion.style.display = "none"}, 2000);
+    play = true;
 }
 
 
 document.addEventListener("DOMContentLoaded", efectosIniciales);
 document.addEventListener("DOMContentLoaded", crearSerpiente);
 playButton.addEventListener("click", mostrarPantallaJuego);
+document.addEventListener("keydown", cambiarAlertaManual);
 document.addEventListener("keydown", jugar);
