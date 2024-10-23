@@ -8,6 +8,9 @@ let img_principal = document.getElementById("img_principal");
 let configuracion = document.getElementById("configuracion");
 let playButton = document.getElementById("playButton");
 let maxAlimentoInput = document.getElementById("maxAlimentoInput");
+//Variables configuracion
+let sound = null;
+let increase = null;
 
 
 //Juego
@@ -21,9 +24,9 @@ let alert = document.getElementById("alert");
 
 //Variables
 let startColumn = 35;
-let endColumn = startColumn-1;
+let endColumn = startColumn - 1;
 let startRow = 23;
-let endRow = startRow+1;
+let endRow = startRow + 1;
 
 
 let longitudSnake = 10;
@@ -49,15 +52,15 @@ score.textContent = "000";
 //Funcion para crear la serpiente
 const crearSerpiente = () => {
     startColumn = 35;
-    endColumn = startColumn-1;
+    endColumn = startColumn - 1;
     startRow = 23;
-    endRow = startRow+1;
+    endRow = startRow + 1;
 
     let fragment = document.createDocumentFragment();
 
     for (let i = 0; i < longitudSnake; i++) {
         let snake = document.createElement("DIV");
-        snake.style.gridArea = startRow + "/" + (startColumn-i) + "/" + endRow + "/" + (endColumn-i);
+        snake.style.gridArea = startRow + "/" + (startColumn - i) + "/" + endRow + "/" + (endColumn - i);
         if (i == 0) {
             snake.classList.add("colorCabeza");
         } else {
@@ -71,7 +74,7 @@ const crearSerpiente = () => {
 
 //Funcion para borrar la serpiente
 const borrarSerpiente = () => {
-    celulas.forEach(celula => {celula.remove()});
+    celulas.forEach(celula => { celula.remove() });
 }
 
 
@@ -90,41 +93,41 @@ const mover = (teclaPulsada) => {
     //corregirErrorSolapamiento();
 
     //Segun la tecla pulsada cambiamos la posicion del primer cuadrado
-    switch(teclaPulsada){
+    switch (teclaPulsada) {
         case "ArrowRight":
             startColumn += 1;
             endColumn += 1;
-        break;
+            break;
         case "ArrowLeft":
             startColumn -= 1;
             endColumn -= 1;
-        break;
+            break;
         case "ArrowUp":
             startRow -= 1;
             endRow -= 1;
-        break;
+            break;
         case "ArrowDown":
             startRow += 1;
             endRow += 1;
-        break;
+            break;
     }
 
     //Damos la nueva posicion a cada cuadrado con el array de estilos
     for (let i = 0; i < celulas.length; i++) {
-        if(i == 0){
+        if (i == 0) {
             celulas[i].style.gridArea = startRow + "/" + (startColumn) + "/" + endRow + "/" + (endColumn);
-        }else{
-            celulas[i].style.gridArea = arrayEstilos[i-1];
+        } else {
+            celulas[i].style.gridArea = arrayEstilos[i - 1];
         }
     }
 
-    
+
     comprobarComida();
     comprobrarChoque();
     comprobarLimites();
     comprobarRecord();
-    
-    
+
+
 
     //Vaciamos el array
     arrayEstilos = [];
@@ -132,8 +135,8 @@ const mover = (teclaPulsada) => {
 
 
 //Comprobar choque con bordes
-const comprobarLimites= () => {
-    if(celulas[0].style.gridRowEnd > 31 || celulas[0].style.gridColumnEnd > 60){
+const comprobarLimites = () => {
+    if (celulas[0].style.gridRowEnd > 31 || celulas[0].style.gridColumnEnd > 60) {
         resetear();
     }
 }
@@ -141,7 +144,7 @@ const comprobarLimites= () => {
 
 //Comprobar si se ha superado el score
 const comprobarRecord = () => {
-    if(parseInt(score.textContent)<parseInt(puntuacion.textContent)){
+    if (parseInt(score.textContent) < parseInt(puntuacion.textContent)) {
         score.textContent = puntuacion.textContent;
     }
 }
@@ -153,7 +156,7 @@ const comprobrarChoque = () => {
         if (arrayEstilos[i] == celulas[0].style.gridArea) {
             resetear();
         }
-        
+
     }
 }
 
@@ -174,11 +177,11 @@ const resetear = () => {
 const comprobarComida = () => {
     //Comprobamos que la cabeza de la serpiente esta en la misma posicion que el alimento
     alimentos.forEach((alimento) => {
-        
+
         if (alimento.style.gridArea == celulas[0].style.gridArea) {
             contadorVecesComida++;
             aumentarVelocidad();
-            puntuacion.textContent = ("00"+contadorVecesComida).slice(-3);
+            puntuacion.textContent = ("00" + contadorVecesComida).slice(-3);
             moverAlimento(alimento);
             aumentarSerpiente();
         }
@@ -187,18 +190,18 @@ const comprobarComida = () => {
 
 
 const aumentarVelocidad = () => {
-    if(contadorVecesComida % 5 == 0){
-        clearInterval(timer);
-        velocidadSnake -= 10;
-        timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), velocidadSnake);
-    }
+    // if(contadorVecesComida){
+    // }
+    clearInterval(timer);
+    velocidadSnake--;
+    timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), velocidadSnake);
 }
 
 
 const aumentarSerpiente = () => {
     let celulaNueva = document.createElement("DIV");
     celulaNueva.classList.add("colorCuerpo");
-    celulaNueva.style.gridArea = celulas[celulas.length-1].style.gridArea;
+    celulaNueva.style.gridArea = celulas[celulas.length - 1].style.gridArea;
     contTablero.appendChild(celulaNueva);
 }
 
@@ -210,16 +213,16 @@ const validaMovimiento = (teclapulsada) => {
     //Validamos que la flecha se puede pulsar
     //Por ejemplo si estamos yendo a la derecha, no se puede ir hacia la
     //izquierda directamente. Tendrias que ir arriba o abajo primero.
-    if(teclapulsada == "ArrowRight" && (teclasPulsadas.slice(-1) == "ArrowUp" || teclasPulsadas.slice(-1) == "ArrowDown")){
+    if (teclapulsada == "ArrowRight" && (teclasPulsadas.slice(-1) == "ArrowUp" || teclasPulsadas.slice(-1) == "ArrowDown")) {
         teclasPulsadas.push(teclapulsada);
 
-    }else if (teclapulsada == "ArrowLeft" && (teclasPulsadas.slice(-1) == "ArrowUp" || teclasPulsadas.slice(-1) == "ArrowDown")) {
+    } else if (teclapulsada == "ArrowLeft" && (teclasPulsadas.slice(-1) == "ArrowUp" || teclasPulsadas.slice(-1) == "ArrowDown")) {
         teclasPulsadas.push(teclapulsada);
 
-    }else if (teclapulsada == "ArrowUp" && (teclasPulsadas.slice(-1) == "ArrowLeft" || teclasPulsadas.slice(-1) == "ArrowRight")) {
+    } else if (teclapulsada == "ArrowUp" && (teclasPulsadas.slice(-1) == "ArrowLeft" || teclasPulsadas.slice(-1) == "ArrowRight")) {
         teclasPulsadas.push(teclapulsada);
 
-    }else if (teclapulsada == "ArrowDown" && (teclasPulsadas.slice(-1) == "ArrowLeft" || teclasPulsadas.slice(-1) == "ArrowRight")) {
+    } else if (teclapulsada == "ArrowDown" && (teclasPulsadas.slice(-1) == "ArrowLeft" || teclasPulsadas.slice(-1) == "ArrowRight")) {
         teclasPulsadas.push(teclapulsada);
     }
 
@@ -230,9 +233,9 @@ const validaMovimiento = (teclapulsada) => {
 //Metodo que inicia el juego al pulsar cualquier tecla
 const jugar = (event) => {
 
-    if(play){
+    if (play) {
         validaMovimiento(event.key);
-        if(primeraJugada){
+        if (primeraJugada) {
             //El intervalo comienza con la primera pulsación y cada vez que se refresque se actualiza con la ultima tecla tocada
             timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), velocidadSnake);
             primeraJugada = false;
@@ -243,26 +246,26 @@ const jugar = (event) => {
 
 
 const moverAlimento = (alimento) => {
-    do{
-        startAliRow = Math.floor(Math.random()*31);
+    do {
+        startAliRow = Math.floor(Math.random() * 31);
         endAliRow = startAliRow + 1;
-        startAliColumn = Math.floor(Math.random()*60);
+        startAliColumn = Math.floor(Math.random() * 60);
         endAliColumn = startAliColumn - 1;
         alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
-        
-    }while(celulas.some((celula) => alimento.style.gridArea == celula.style.gridArea) || alimento.style.gridArea == 0 / 0 / 0 / 0)
+
+    } while (celulas.some((celula) => alimento.style.gridArea == celula.style.gridArea) || alimento.style.gridArea == 0 / 0 / 0 / 0)
 }
 
 
 const darPosicionAlimento = (alimento) => {
-    do{
-        startAliRow = Math.floor(Math.random()*31);
+    do {
+        startAliRow = Math.floor(Math.random() * 31);
         endAliRow = startAliRow + 1;
-        startAliColumn = Math.floor(Math.random()*60);
+        startAliColumn = Math.floor(Math.random() * 60);
         endAliColumn = startAliColumn - 1;
         alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + endAliRow + "/" + endAliColumn;
-    }while(alimento.style.gridArea == 0 / 0 / 0 / 0)
-    
+    } while (alimento.style.gridArea == 0 / 0 / 0 / 0)
+
 }
 
 
@@ -274,21 +277,21 @@ const cambiarAlertaManual = (event) => {
 
 
 const cambiarAlerta = () => {
-        let tiene = alert.classList.toggle("desaparecer");
-        if (!tiene) {
-            clearInterval(timer);
-            primeraJugada = false;
-        }else{
-            primeraJugada = true;
-        }
+    let tiene = alert.classList.toggle("desaparecer");
+    if (!tiene) {
+        clearInterval(timer);
+        primeraJugada = false;
+    } else {
+        primeraJugada = true;
+    }
 
 }
 
 
 const efectosIniciales = () => {
     img_principal.style.transform = "scale(17)";  // En tres segundos desde el dom la imagen aumenta
-    setTimeout(() => {intro.style.opacity = "0"}, 4500); // En 4,5 segundos desde el dom la imagen se empieza a desvaneces
-    setTimeout(() => {intro.style.display = "none"}, 6500);
+    setTimeout(() => { intro.style.opacity = "0" }, 1500); // En 4,5 segundos desde el dom la imagen se empieza a desvaneces
+    setTimeout(() => { intro.style.display = "none" }, 3500);
 }
 
 const generarAlimentos = () => {
@@ -298,7 +301,7 @@ const generarAlimentos = () => {
         let alimento = document.createElement("DIV");
         alimento.classList.add("alimento");
         darPosicionAlimento(alimento);
-        fragment.appendChild(alimento); 
+        fragment.appendChild(alimento);
     }
     alimentos = [...fragment.children];
     contTablero.insertBefore(fragment, contTablero.firstElementChild);
@@ -309,15 +312,58 @@ const cargarConfiguracion = () => {
 }
 
 const mostrarPantallaJuego = () => {
-    cargarConfiguracion();
-    configuracion.style.opacity = "0";
-    setTimeout(() => {configuracion.style.display = "none"}, 2000);
-    play = true;
+    console.log(sound);
+    console.log(increase);
+    if ((sound!=null) && (increase!=null)) {
+
+        cargarConfiguracion();
+        configuracion.style.opacity = "0";
+        setTimeout(() => { configuracion.style.display = "none" }, 2000);
+        play = true;
+    }
+}
+
+const marcarOpcionAjustes = (event) => {
+    //Si marcamos uno se quita el otro
+    if (event.target.value == "on" && event.target.nextElementSibling.classList.contains("active")) {
+        event.target.nextElementSibling.classList.remove("active");
+    } else if (event.target.value == "off" && event.target.previousElementSibling.classList.contains("active")) {
+        event.target.previousElementSibling.classList.remove("active");
+    }
+
+    //Cada vez que pulsamos se activa y se desactiva
+    if (event.target.nodeName == "BUTTON") {
+        event.target.classList.toggle("active");
+    }
+    let elementoSeleccionado;
+    [...event.target.parentElement.children].forEach((hijo) => {
+        if (hijo.classList.contains("active")) {
+            elementoSeleccionado = hijo;
+        }
+    })
+    if (elementoSeleccionado) {
+        switch (elementoSeleccionado.id) {
+            case "sound_on":
+                sound = true;
+                break;
+            case "sound_off":
+                sound = false;
+                break;
+            case "increase_on":
+                increase = true;
+                break;
+            case "increase_off":
+                increase = false
+                break;
+
+        }
+    }
 }
 
 
 document.addEventListener("DOMContentLoaded", efectosIniciales);
 document.addEventListener("DOMContentLoaded", crearSerpiente);
-playButton.addEventListener("click", mostrarPantallaJuego);
 document.addEventListener("keydown", cambiarAlertaManual);
 document.addEventListener("keydown", jugar);
+playButton.addEventListener("click", mostrarPantallaJuego);
+configuracion.addEventListener("click", marcarOpcionAjustes)
