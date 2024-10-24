@@ -125,24 +125,18 @@ const mover = (teclaPulsada) => {
 
 //Comprobar choque con bordes
 const comprobarLimites = () => {
-    if (celulas[0].style.gridRowEnd > 31 || celulas[0].style.gridColumnEnd > 60) {
-        resetear();
-    }
+    (celulas[0].style.gridRowEnd > 31 || celulas[0].style.gridColumnEnd > 60) && resetear(); //If
 }
 
 //Comprobar si se ha superado el score
 const comprobarRecord = () => {
-    if (parseInt(score.textContent) < parseInt(puntuacion.textContent)) {
-        score.textContent = puntuacion.textContent;
-    }
+    (parseInt(score.textContent) < parseInt(puntuacion.textContent)) && (score.textContent = puntuacion.textContent)
 }
 
 //Comprobar si la serpiente se come a si misma
 const comprobrarChoque = () => {
     for (let i = 1; i < arrayEstilos.length; i++) {
-        if (arrayEstilos[i] == celulas[0].style.gridArea) {
-            resetear();
-        }
+        (arrayEstilos[i] == celulas[0].style.gridArea) && resetear(); //If
     }
 }
 
@@ -163,9 +157,7 @@ const comprobarComida = () => {
     //Comprobamos que la cabeza de la serpiente esta en la misma posicion que el alimento
     alimentos.forEach((alimento) => {
         if (alimento.style.gridArea == celulas[0].style.gridArea) {
-            if(sound == true){
-                audioComida.play();
-            }
+            (sound == true) && audioComida.play(); //If
             contadorVecesComida++;
             aumentarVelocidad();
             puntuacion.textContent = ("00" + contadorVecesComida).slice(-3);
@@ -179,12 +171,9 @@ const aumentarVelocidad = () => {
     //Si el incrementador esta activado
     if(increase == true){
         //Cada multiplo de 3 bajaremos 6 puntos la velocidad
-        if(contadorVecesComida % 2 == 0 && velocidadSnake > 40){
-            velocidadSnake-=4;
-        }
+        (contadorVecesComida % 2 == 0 && velocidadSnake > 40) && (velocidadSnake-=4); //If
     }
     clearInterval(timer);
-    velocidadSnake--;
     timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), velocidadSnake);
 }
 
@@ -201,7 +190,6 @@ const aumentarSerpiente = () => {
 const validaMovimiento = (teclapulsada) => {
     if ((teclapulsada == "ArrowRight" || teclapulsada == "ArrowLeft") && (teclasPulsadas.slice(-1) == "ArrowUp" || teclasPulsadas.slice(-1) == "ArrowDown")) {
         teclasPulsadas.push(teclapulsada);
-
     } else if ((teclapulsada == "ArrowUp" || teclapulsada == "ArrowDown") && (teclasPulsadas.slice(-1) == "ArrowLeft" || teclasPulsadas.slice(-1) == "ArrowRight")) {
         teclasPulsadas.push(teclapulsada);
     }
@@ -222,7 +210,7 @@ const darPosicionAlimento = (alimento) => {
         startAliRow = Math.floor(Math.random() * 31);
         startAliColumn = Math.floor(Math.random() * 60);
         alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + (startAliRow + 1) + "/" + (startAliColumn - 1);
-    } while (alimento.style.gridArea == 0 / 0 / 0 / 0)
+    } while (startAliColumn == 23)
 }
 
 const cambiarAlertaManual = (event) => {
@@ -273,11 +261,7 @@ const eliminarAlimentos = () => {
 }
 
 const velocidadesSerpiente = () => {
-    if(increase){
-        velocidadSnake = 130;
-    }else if(!increase){
-        velocidadSnake = speed;
-    }
+    increase ? velocidadSnake = 130 : velocidadSnake = speed; //If
 }
 
 const cargarConfiguracion = () => {
@@ -292,9 +276,7 @@ const cargarConfiguracion = () => {
 
 const mostrarConfiguracion = () => {
     eliminarAlimentos();
-    if(alert.classList.contains("desaparecer")){
-        cambiarAlerta();
-    }
+    alert.classList.contains("desaparecer") && cambiarAlerta(); //If
     play = false;
     
     configuracion.style.display = "flex";
@@ -310,16 +292,12 @@ const marcarOpcionAjustes = (event) => {
     });
 
     //Cada vez que pulsamos se activa y se desactiva
-    if (event.target.nodeName == "BUTTON") {
-        event.target.classList.toggle("active");
-    }
+    (event.target.nodeName == "BUTTON") && event.target.classList.toggle("active"); //If
 
     //El elemento marcado en on le guardamos en una variable ya que no siempre es el event y lo evaluamos
     let elementoSeleccionado;
     [...event.target.parentElement.children].forEach((hijo) => {
-        if (hijo.classList.contains("active")) {
-            elementoSeleccionado = hijo;
-        }
+        hijo.classList.contains("active") && (elementoSeleccionado = hijo); //If
     })
 
     if (elementoSeleccionado) {
@@ -352,11 +330,7 @@ const marcarOpcionAjustes = (event) => {
         }
     }
 
-    if(increase_off.classList.contains("active")){
-        ajusteElegir.style.display = "flex";
-    }else {
-        ajusteElegir.style.display = "none";
-    }
+    increase_off.classList.contains("active") ? ajusteElegir.style.display = "flex" : ajusteElegir.style.display = "none";
 }
 
 document.addEventListener("DOMContentLoaded", efectosIniciales);
