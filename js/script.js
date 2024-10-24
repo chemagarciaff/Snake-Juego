@@ -1,4 +1,5 @@
 
+
 //Intro
 let intro = document.getElementById("intro");
 let img_principal = document.getElementById("img_principal");
@@ -8,9 +9,16 @@ let img_principal = document.getElementById("img_principal");
 let configuracion = document.getElementById("configuracion");
 let playButton = document.getElementById("playButton");
 let maxAlimentoInput = document.getElementById("maxAlimentoInput");
+let ajusteVelocidad = document.getElementById("ajuste_velocidad");
+let ajusteElegir = document.getElementById("ajuste_elegir");
+let increase_off = document.getElementById("increase_off");
+let increase_on = document.getElementById("increase_on");
 //Variables configuracion
 let sound = null;
 let increase = null;
+let speed = null;
+const audioComida = new Audio('../assets/sounds/sonidoAlimento.mp3');
+const audioChoque = new Audio('../assets/sounds/golpe.mp3');
 
 
 //Juego
@@ -39,7 +47,9 @@ let celulas;
 let alimentos;
 let numAlimentos;
 let arrayEstilos = [];
-let velocidadSnake = 150;
+let velocidadSnake;
+
+
 
 let play = false;
 let primeraJugada = false;
@@ -162,12 +172,13 @@ const comprobrarChoque = () => {
 
 
 const resetear = () => {
+    audioChoque.play();
     cambiarAlerta();
     borrarSerpiente();
     teclasPulsadas = ["ArrowRight"];
     longitudSnake = 10;
     contadorVecesComida = 0;
-    velocidadSnake = 150;
+    velocidadesSerpiente();
     puntuacion.textContent = ("00" + contadorVecesComida);
     crearSerpiente();
 }
@@ -179,6 +190,9 @@ const comprobarComida = () => {
     alimentos.forEach((alimento) => {
 
         if (alimento.style.gridArea == celulas[0].style.gridArea) {
+            if(sound == true){
+                audioComida.play();
+            }
             contadorVecesComida++;
             aumentarVelocidad();
             puntuacion.textContent = ("00" + contadorVecesComida).slice(-3);
@@ -190,8 +204,13 @@ const comprobarComida = () => {
 
 
 const aumentarVelocidad = () => {
-    // if(contadorVecesComida){
-    // }
+    //Si el incrementador esta activado
+    if(increase == true){
+        //Cada multiplo de 3 bajaremos 6 puntos la velocidad
+        if(contadorVecesComida % 2 == 0 && velocidadSnake > 40){
+            velocidadSnake-=4;
+        }
+    }
     clearInterval(timer);
     velocidadSnake--;
     timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), velocidadSnake);
@@ -292,6 +311,7 @@ const efectosIniciales = () => {
     img_principal.style.transform = "scale(17)";  // En tres segundos desde el dom la imagen aumenta
     setTimeout(() => { intro.style.opacity = "0" }, 1500); // En 4,5 segundos desde el dom la imagen se empieza a desvaneces
     setTimeout(() => { intro.style.display = "none" }, 3500);
+    ajusteElegir.style.display = "none";
 }
 
 const generarAlimentos = () => {
@@ -307,15 +327,24 @@ const generarAlimentos = () => {
     contTablero.insertBefore(fragment, contTablero.firstElementChild);
 }
 
+
+const velocidadesSerpiente = () => {
+    if(increase){
+        velocidadSnake = 130;
+    }else if(!increase){
+        velocidadSnake = speed;
+    }
+}
+
 const cargarConfiguracion = () => {
     generarAlimentos();
+    velocidadesSerpiente();
 }
 
 const mostrarPantallaJuego = () => {
-    console.log(sound);
-    console.log(increase);
-    if ((sound!=null) && (increase!=null)) {
-
+  
+    if ((sound!=null) && (increase!=null) && (speed!=null)) {
+        console.log(speed)
         cargarConfiguracion();
         configuracion.style.opacity = "0";
         setTimeout(() => { configuracion.style.display = "none" }, 2000);
@@ -325,16 +354,19 @@ const mostrarPantallaJuego = () => {
 
 const marcarOpcionAjustes = (event) => {
     //Si marcamos uno se quita el otro
-    if (event.target.value == "on" && event.target.nextElementSibling.classList.contains("active")) {
-        event.target.nextElementSibling.classList.remove("active");
-    } else if (event.target.value == "off" && event.target.previousElementSibling.classList.contains("active")) {
-        event.target.previousElementSibling.classList.remove("active");
-    }
+    [...event.target.parentElement.children].forEach((hijo) => {
+        if(hijo.classList.contains("active") && hijo != event.target){
+            hijo.classList.remove("active");
+        }
+    });
 
     //Cada vez que pulsamos se activa y se desactiva
     if (event.target.nodeName == "BUTTON") {
         event.target.classList.toggle("active");
     }
+
+    //El elemento marcado el guardamos en una variable ya
+    //que no siempre es el event y lo evaluamos
     let elementoSeleccionado;
     [...event.target.parentElement.children].forEach((hijo) => {
         if (hijo.classList.contains("active")) {
@@ -355,8 +387,28 @@ const marcarOpcionAjustes = (event) => {
             case "increase_off":
                 increase = false
                 break;
+            case "slow":
+                speed = 140;
+                break;
+            case "medium":
+                speed = 110;
+                break;
+            case "fast":
+                speed = 80;
+                break;
+            case "super-fast":
+                speed = 40;
+                break;
 
         }
+    }
+}
+
+const mostrarVelocidades = (event) => {
+    if(!increase_off.classList.contains("active")){
+        ajusteElegir.style.display = "flex";
+    }else {
+        ajusteElegir.style.display = "none";
     }
 }
 
@@ -365,5 +417,6 @@ document.addEventListener("DOMContentLoaded", efectosIniciales);
 document.addEventListener("DOMContentLoaded", crearSerpiente);
 document.addEventListener("keydown", cambiarAlertaManual);
 document.addEventListener("keydown", jugar);
-playButton.addEventListener("click", mostrarPantallaJuego);
-configuracion.addEventListener("click", marcarOpcionAjustes)
+configuracion.addEventListener("mousedown", marcarOpcionAjustes);
+ajusteVelocidad.addEventListener("mousedown", mostrarVelocidades);
+playButton.addEventListener("mousedown", mostrarPantallaJuego);

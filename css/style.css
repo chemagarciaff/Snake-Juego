@@ -76,7 +76,7 @@ body{
         border: 7px solid var(--grisSecundario);
         padding: 30px;
     }
-
+    
     .ajuste{
         width: 100%;
         display: flex;
@@ -87,7 +87,7 @@ body{
             width: 70%;
         }
     }
-
+    
     .opcionesAjuste{
         width: 30%;
         display: flex;
@@ -96,6 +96,15 @@ body{
         justify-content: center;
     }
 
+    
+    .ajuste_sonido{
+        margin-right: 19px;
+    }
+
+    .ajuste_elegir {
+        font-size: 1.5rem;
+    }
+    
 
     .button{
         position: relative;
@@ -111,23 +120,36 @@ body{
         align-items: center;
         box-shadow: 0px 8px 2px 0px rgba(0,0,0,0.81);
     }
-
+    
     .active{
         top: 6px;
         box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+        background-color: #d5ff49;
     }
-    
-    .ajuste_sonido{
-        margin-right: 19px;
-    }
-    
     .playButton {
         width: 100%;
         font-size: 2rem;
         background-color: var(--verdePrincipal);
         border: 3px solid var(--grisSecundario);
         padding: 10px 0;
+        box-shadow: 0px 8px 2px 0px rgba(0,0,0,0.81);
     }
+
+    .ajuste_elegir .button{
+        font-size: 1.5rem;
+        width: auto;
+        height: auto;
+        padding: 5px;
+    }
+    .ajuste_elegir .opcionesAjuste{
+        width: 50%;
+    }
+    .ajuste_elegir h2{
+        width: 50%;
+        text-align: center;
+    }
+
+    
     
     .maxAlimentoInput{
         box-shadow: 0px 6px 2px 0px rgba(0,0,0,0.81);
@@ -221,4 +243,7 @@ body{
 
 .desaparecer{
     display: none;
+}
+.mostrar{
+    display: flex;
 }
