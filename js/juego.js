@@ -12,7 +12,6 @@ let teclaPulsada;
 let timer;
 let celulas;
 let alimentos;
-let numeroAlimentos = localStorage.getItem("numAlimentos");
 let arrayEstilos = [];
 let velocidadSnake;
 let longitudSnake = 10;
@@ -23,6 +22,7 @@ let endColumn = startColumn - 1;
 let startRow = 23;
 let endRow = startRow + 1;
 
+let numeroAlimentos = localStorage.getItem("numAlimentos");
 let speed = localStorage.getItem("speed");
 let sound = localStorage.getItem("sound");
 let increase = localStorage.getItem("increase");
