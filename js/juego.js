@@ -26,8 +26,8 @@ let numeroAlimentos = localStorage.getItem("numAlimentos");
 let speed = localStorage.getItem("speed");
 let sound = localStorage.getItem("sound");
 let increase = localStorage.getItem("increase");
-const audioComida = new Audio('../assets/sounds/sonidoAlimento.mp3');
-const audioChoque = new Audio('../assets/sounds/golpe.mp3');
+let audioComida = new Audio('../assets/sounds/sonidoAlimento.mp3');
+let audioChoque = new Audio('../assets/sounds/golpe.mp3');
 
 puntuacion.textContent = ("00" + contadorVecesComida);
 score.textContent = "000";
@@ -143,7 +143,9 @@ const comprobarComida = () => {
     //Comprobamos que la cabeza de la serpiente esta en la misma posicion que el alimento
     alimentos.forEach((alimento) => {
         if (alimento.style.gridArea == celulas[0].style.gridArea) {
-            (sound == true) && audioComida.play(); //If
+            if (sound == true) {
+                audioComida.play();
+            }
             contadorVecesComida++;
             aumentarVelocidad();
             puntuacion.textContent = ("00" + contadorVecesComida).slice(-3);
@@ -207,7 +209,7 @@ const cambiarAlertaManual = (event) => {
     }
 }
 
-const   cambiarAlerta = () => {
+const cambiarAlerta = () => {
         let tiene = alert.classList.toggle("desaparecer");
         if (!tiene) {
             clearInterval(timer);
