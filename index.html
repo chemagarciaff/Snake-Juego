@@ -10,9 +10,77 @@
 </head>
 
 <body>
+
+
     <section class="intro" id="intro">
         <img src="./assets/images/logotipo.webp" alt="" class="img_principal" id="img_principal">
     </section>
+
+    <section class="juego" id="juego">
+        <img src=".././assets/images/logotipo.webp" alt="" class="logo">
+
+        <section class="tablero" id="tablero">
+            <div class="contTablero" id="contTablero">
+                <!-- Aqui se insertan las comidas -->
+                <!-- Aqui se insertan el cuerpo de la serpiente -->
+            </div>
+
+            <div class="marcador" id="marcador">
+                <span class="puntuacion" id="puntuacion"></span>
+                <p>Score: <span class="score" id="score"></span></p>
+            </div>
+            <div class="alert" id="alert">Press <br>'Space Bar'</div>
+        </section>
+        
+        <div class="back_button" id="back_button">Atras</div>
+    </section>
+
+    <section class="configuracion" id="configuracion">
+        <h1 class="title">Ajustes</h1>
+
+        <div class="ajustes" id="ajustes">
+            <article class="ajuste ajuste_sonido" id="ajuste_sonido">
+                <h2>Sound</h2>
+                <form class="opcionesAjuste">
+                    <button type="button" class="button" value="on" id="sound_on">On</button>
+                    <button type="button" class="button" value="off" id="sound_off">Off</button>
+                </form>
+            </article>
+
+            <article class="ajuste ajuste_velocidad" id="ajuste_velocidad">
+                <h2>Increase speed </h2>
+                <form class="opcionesAjuste">
+                    <button type="button" class="button" value="on" id="increase_on">On</button>
+                    <button type="button" class="button" value="off" id="increase_off">Off</button>
+                </form>
+            </article>
+            <article class="ajuste ajuste_elegir" id="ajuste_elegir">
+                <h2>Snake Speed</h2>
+                <form class="opcionesAjuste">
+                    <button type="button" class="button" id="slow">Slow</button>
+                    <button type="button" class="button" id="medium">Medium</button>
+                    <button type="button" class="button" id="fast">Fast</button>
+                    <button type="button" class="button" id="super-fast">Super-fast</button>
+                </form>
+            </article>
+            <article class="ajuste ajuste_alimento" id="ajuste_alimento">
+                <h2>Feed</h2>
+                <form class="opcionesAjuste">
+                    <input type="number" name="maxAlimentoInput" class="maxAlimentoInput" id="maxAlimentoInput" max="100"
+                        min="1" value="1" required>
+                </form>
+            </article>
+            <button class="playButton" id="playButton">PLAY</button>
+        </div>
+    </section>
+
+
+
+
+
+
+
+
     <script src="./js/script.js"></script>
 </body>
 
