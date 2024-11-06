@@ -1,7 +1,7 @@
 :root{
     --verdePrincipal: #759604;
     --verdePrincipalTransparente: #749604d1;
-    --grisSecundario: rgb(33, 39, 33);
+    --grisSecundario: rgb(22, 25, 22);
 }
 
 @font-face {
@@ -15,6 +15,7 @@ html{
 
 body{
     position: relative;
+    overflow: hidden;
 }
 
 *{
@@ -22,10 +23,10 @@ body{
     padding: 0;
     box-sizing: border-box;
     font-family: minecraft;
+    color: var(--grisSecundario);
 }
 
 
-/* Container1 */
 
 .intro, .configuracion, .juego {
     position: absolute;
@@ -38,16 +39,58 @@ body{
 
 .intro {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: opacity 2s ease;
+    transition: opacity 1s ease;
     z-index: 10;
 
 
-    .img_principal{
-        width: 50px;
-        border: 1px solid black;
-        transition: transform 1s ease; /* Transición suave */
+    .img-principal{
+        width: 45%;
+        border: 6px solid var(--grisSecundario);
+    }
+    
+    .intro__container{
+        width: 10%;
+        background-color: var(--verdePrincipal);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 100px;
+        align-items: center;
+        transition: transform 2s ease; /* Transición suave */
+    }
+
+    .press-enter{
+        font-size: 2.3rem;
+        opacity: 0;
+    }
+}
+
+.zoomInicial{
+    animation: zoomInicial 2s ease-out forwards;
+}
+
+@keyframes zoomInicial {
+    0%{
+        width: 10%;
+    }
+    100%{
+        width: 100%;
+    }
+}
+
+.parpadeo{
+    animation: parpadeo 1s infinite alternate linear;
+}
+
+@keyframes parpadeo {
+    0%{
+        opacity: 0.2;
+    }
+    100%{
+        opacity: 1;
     }
 }
 
@@ -58,22 +101,22 @@ body{
     align-items: center;
     z-index: 5;
     padding: 100px;
-    transition: opacity 2s ease; /* Transición suave */
+    transition: opacity 1s ease; /* Transición suave */
 
     .title{
-        font-size: 5rem;
+        font-size: 3.5rem;
         letter-spacing: 0.7rem;
     }
 
     .ajustes{
-        font-size: 2rem;
+        font-size: 1.5rem;
         letter-spacing: 0.4rem;
-        width: 50%;
+        width: 65%;
         display: flex;
         flex-direction: column;
         align-items: start;
         gap: 30px;
-        border: 7px solid var(--grisSecundario);
+        border: 7px dashed var(--grisSecundario);
         padding: 30px;
     }
     
@@ -102,7 +145,8 @@ body{
     }
 
     .ajuste_elegir {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+        display: none;
     }
     
 
@@ -119,6 +163,7 @@ body{
         justify-content: center;
         align-items: center;
         box-shadow: 0px 8px 2px 0px rgba(0,0,0,0.81);
+        cursor: pointer;
     }
     
     .active{
@@ -133,6 +178,7 @@ body{
         border: 3px solid var(--grisSecundario);
         padding: 10px 0;
         box-shadow: 0px 8px 2px 0px rgba(0,0,0,0.81);
+        cursor: pointer;
     }
 
     .ajuste_elegir .button{
@@ -142,24 +188,26 @@ body{
         padding: 5px;
     }
     .ajuste_elegir .opcionesAjuste{
-        width: 50%;
+        width: 60%;
     }
     .ajuste_elegir h2{
         width: 50%;
-        text-align: center;
+        margin-left: 40px;
     }
 
-    
-    
     .maxAlimentoInput{
         box-shadow: 0px 6px 2px 0px rgba(0,0,0,0.81);
         font-size: 2.2rem;
-        width: 50px;
+        width: 70px;
         height: 50px;
         background-color: var(--verdePrincipal);
         outline: none;
     }
 }
+
+
+
+
 
 .juego{
     display: grid;
@@ -170,66 +218,84 @@ body{
     grid-template-areas: 
     "logo tablero";
     z-index: 0 ;
-}
-.logo{
-    width: 500px;
-    height: 400px;
-    grid-area: logo;
-    margin-left: 300px;
-    box-shadow: 0 0 100px 100px var(--verdePrincipal) inset;
-    border: 6px solid var(--grisSecundario);
     
-}
+    .logo{
+        width: 450px;
+        height: 300px;
+        grid-area: logo;
+        margin-left: 300px;
+        box-shadow: 0 0 100px 100px var(--verdePrincipal) inset;
+        border: 6px solid var(--grisSecundario);
+        
+    }
+    
+    .tablero{
+        width: 60%;
+        height: 50%;
+        border: 5px dashed var(--grisSecundario);
+        grid-area: tablero;
+        background-color: var(--verdePrincipal);
+        position: relative;
+    }
+    .marcador{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        top: -55px;
+        color: var(--grisSecundario);
+        font-family: minecraft;
+        font-size: 3rem;
+    }
+    
+    .alimento{
+        background-image: url(./../assets/images/alimento.png);
+        background-color: var(--grisSecundario);
+        border: 1px solid var(--verdePrincipal);
+    }
+    .contTablero{
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: repeat(60, 1fr);
+        grid-template-rows: repeat(30, 1fr);
+        
+    }
+    
+    .colorCabeza{
+        border: 1px solid var(--grisSecundario);
+        background-color: rgb(18, 19, 19);
+        z-index: 5;
+    }
+    
+    .colorCuerpo{
+        border: 1px solid var(--verdePrincipal);
+        background-color: rgb(34, 34, 34);
+    }
+    
+  
+    
+    .back_button {
+        font-size: 2.5rem;
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        cursor: pointer;
+    }
 
-.tablero{
-    width: 60%;
-    height: 50%;
-    border: 5px dashed var(--grisSecundario);
-    grid-area: tablero;
-    background-color: var(--verdePrincipal);
-    position: relative;
-}
-.marcador{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    top: -75px;
-    color: var(--grisSecundario);
-    font-family: minecraft;
-    font-size: 60px;
-}
+    .back_button:hover {
+        text-decoration: underline;
+    }
 
-.alimento{
-    background-image: url(./../assets/images/alimento.png);
-    background-color: var(--grisSecundario);
-    border: 1px solid var(--verdePrincipal);
-}
-.contTablero{
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(60, 1fr);
-    grid-template-rows: repeat(30, 1fr);
-
-}
-
-.colorCabeza{
-    border: 1px solid var(--grisSecundario);
-    background-color: rgb(18, 19, 19);
-    z-index: 5;
-}
-
-.colorCuerpo{
-    border: 1px solid var(--verdePrincipal);
-    background-color: rgb(34, 34, 34);
 }
 
 .alert{
     width: 100%;
     height: 100%;
     font-family: minecraft;
-    font-size: 5em;
+    font-size: 3rem;
     color: var(--grisSecundario);
     background-color: var(--verdePrincipalTransparente);
     position: absolute;
@@ -241,18 +307,22 @@ body{
     text-align: center;
 }
 
-.back_button {
-    font-size: 1.5rem;
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    top: 20px;
-    left: 20px;
-}
-
 .desaparecer{
     display: none;
 }
 .mostrar{
     display: flex;
+}
+
+.choqueSerpiente {
+    animation: choqueSerpiente 0.5s 6 alternate linear;
+}
+
+@keyframes choqueSerpiente {
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
 }

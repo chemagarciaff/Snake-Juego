@@ -1,8 +1,10 @@
 //Intro
 let intro = document.getElementById("intro");
-let img_principal = document.getElementById("img_principal");
+let intro_container = document.getElementById("intro__container");
+let press_enter = document.getElementById("press-enter");
 
 //Variables configuracion
+let ajustes = document.getElementById("ajustes");
 let configuracion = document.getElementById("configuracion");
 let playButton = document.getElementById("playButton");
 let maxAlimentoInput = document.getElementById("maxAlimentoInput");
@@ -27,8 +29,8 @@ let alert = document.getElementById("alert");
 let teclasPulsadas = ["ArrowRight"];
 let teclaPulsada;
 let timer;
-let celulas;
-let alimentos;
+let celulas = [];
+let alimentos = [];
 let numAlimentos;
 let arrayEstilos = [];
 let velocidadSnake;
@@ -46,9 +48,136 @@ let play = false;
 puntuacion.textContent = ("00" + contadorVecesComida);
 score.textContent = "000";
 
-//Funciones
+
+
+//AQUI ESTAN LAS FUNCIONES
+
+//Funcion para generar los efectos iniciales de ampliacion de la imagen y desvanecimiento
+const efectosIniciales = () => {
+
+    intro_container.classList.add("zoomInicial");
+    setTimeout(() => { press_enter.classList.add("parpadeo") }, 2500)
+    
+}
+
+const ocultarVentana = (event) => {
+    if(event.key == "Enter"){   
+        intro.style.opacity = "0";
+        setTimeout(() => { intro.style.display = "none" }, 2000);
+    }
+}
+
+
+//Funcion para controlar los ajustes seleccionados y dar el valor
+//correspondiente a las variables de sonido, velocidad y numero de alimentos
+const marcarOpcionAjustes = (event) => {
+
+    //Si marcamos uno se quita el otro
+    [...event.target.parentElement.children].forEach((hijo) => {
+        if(hijo.classList.contains("active") && hijo != event.target){
+            hijo.classList.remove("active");
+        }
+    });
+
+    //Cada vez que pulsamos se activa y se desactiva
+    if (event.target.nodeName == "BUTTON") {
+        event.target.classList.toggle("active");
+    }
+
+    //El elemento marcado en "on" le guardamos en una variable ya que no siempre coincide
+    //con el event
+    let elementoSeleccionado;
+    let contador = 0;
+    [...event.target.parentElement.children].forEach((hijo) => {
+        if (hijo.classList.contains("active")) {
+            elementoSeleccionado = hijo;
+            contador++;
+        }
+
+        if(contador == 0){
+            if(event.target.id == "increase_on" || event.target.id == "increase_off"){
+                increase = null;
+            }
+            if(event.target.id == "sound_on" || event.target.id == "sound_off"){
+                sound = null;
+            }
+            if(event.target.id == "slow" || event.target.id == "medium" || event.target.id == "fast" || event.target.id == "super-fast"){
+                speed = null;
+            }
+
+        }
+    })
+
+    //Evaluamos ese elemento seleccionado
+    if (elementoSeleccionado) {
+        switch (elementoSeleccionado.id) {
+            case "sound_on":
+                sound = true;
+                break;
+            case "sound_off":
+                sound = false;
+                break;
+            case "increase_on":
+                increase = true;
+                break;
+            case "increase_off":
+                increase = false
+                break;
+            case "slow":
+                speed = 140;
+                break;
+            case "medium":
+                speed = 110;
+                break;
+            case "fast":
+                speed = 80;
+                break;
+            case "super-fast":
+                speed = 40;
+                break;
+
+        }
+    }
+
+    //Muestra u oculta la opcion de elegir la velocidad en funcion de
+    //si se elige la opcion de no aumentar la velocidad
+    if(increase_off.classList.contains("active")){
+        ajusteElegir.style.display = "flex";
+    }else {
+        ajusteElegir.style.display = "none";
+    }
+}
+
+//Funcion para dar un valor a la variable velocidadSnake en funcion de si
+//se eligio la opcion "aumentar velocidad" o "no aumentar velocidad"
+const velocidadesSerpiente = () => {
+
+    if(increase){
+        velocidadSnake = 130;
+    }else if(!increase){
+        velocidadSnake = speed;
+    }
+}
+
+
+//Funcion para aumentar la velocidad de la serpiente cada vez que come.
+//Solo se llama si la opcion seleccionada fue "aumentar velocidad"
+const aumentarVelocidad = () => {
+
+    //Cada multiplo de 2 bajaremos 3 puntos la velocidad
+    if(contadorVecesComida % 2 == 0 && velocidadSnake > 40){
+        velocidadSnake-=3;
+    }
+    clearInterval(timer);
+    timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), velocidadSnake);
+}
+
+
+
 //Funcion para crear la serpiente
-const crearSerpiente = () => {
+const generarSerpiente = () => {
+
+    //Valores iniciales
     startColumn = 35;
     endColumn = startColumn - 1;
     startRow = 23;
@@ -56,6 +185,7 @@ const crearSerpiente = () => {
 
     let fragment = document.createDocumentFragment();
 
+    //Creamos la serpiente en funcion de la longitud que le damos
     for (let i = 0; i < longitudSnake; i++) {
         let snake = document.createElement("DIV");
         snake.style.gridArea = startRow + "/" + (startColumn - i) + "/" + (startRow + 1) + "/" + (startColumn - 1 - i);
@@ -69,10 +199,13 @@ const crearSerpiente = () => {
     contTablero.appendChild(fragment);
 }
 
+
 //Funcion para borrar la serpiente
-const borrarSerpiente = () => {
-    celulas.forEach(celula => { celula.remove() });
-}
+const borrarSerpiente = () => celulas.forEach(celula => {celula.remove() });
+
+//Funcion para borrar los alimentos
+const borrarAlimentos = () => alimentos.forEach(alimento => {alimento.remove() });
+
 
 //Funcion para mover la serpiente
 const mover = (teclaPulsada) => {
@@ -114,6 +247,7 @@ const mover = (teclaPulsada) => {
         }
     }
 
+    //Evaluamos la situacion
     comprobarComida();
     comprobrarChoque();
     comprobarLimites();
@@ -123,22 +257,18 @@ const mover = (teclaPulsada) => {
     arrayEstilos = [];
 }
 
+
 //Comprobar choque con bordes
 const comprobarLimites = () => {
+
     if (celulas[0].style.gridRowEnd > 31 || celulas[0].style.gridColumnEnd > 60) {
         resetear();
     }
 }
 
-//Comprobar si se ha superado el score
-const comprobarRecord = () => {
-    if (parseInt(score.textContent) < parseInt(puntuacion.textContent)) {
-        score.textContent = puntuacion.textContent;
-    }
-}
-
-//Comprobar si la serpiente se come a si misma
+//Comprobar choque consigo misma
 const comprobrarChoque = () => {
+
     for (let i = 1; i < arrayEstilos.length; i++) {
         if (arrayEstilos[i] == celulas[0].style.gridArea) {
             resetear();
@@ -146,28 +276,29 @@ const comprobrarChoque = () => {
     }
 }
 
-const resetear = () => {
-    audioChoque.play();
-    cambiarAlerta();
-    borrarSerpiente();
-    teclasPulsadas = ["ArrowRight"];
-    longitudSnake = 10;
-    contadorVecesComida = 0;
-    velocidadesSerpiente();
-    puntuacion.textContent = ("00" + contadorVecesComida);
-    crearSerpiente();
+//Comprobar si se ha superado el score
+const comprobarRecord = () => {
+
+    if (parseInt(score.textContent) < parseInt(puntuacion.textContent)) {
+        score.textContent = puntuacion.textContent;
+    }
 }
 
-//funcion para comprobar si he comido
+//Comprobar si ha comido
 const comprobarComida = () => {
+
     //Comprobamos que la cabeza de la serpiente esta en la misma posicion que el alimento
     alimentos.forEach((alimento) => {
+
         if (alimento.style.gridArea == celulas[0].style.gridArea) {
-            if(sound == true){
+
+            contadorVecesComida++;
+            if(sound){
                 audioComida.play();
             }
-            contadorVecesComida++;
-            aumentarVelocidad();
+            if(increase){
+                aumentarVelocidad();
+            }
             puntuacion.textContent = ("00" + contadorVecesComida).slice(-3);
             moverAlimento(alimento);
             aumentarSerpiente();
@@ -175,30 +306,45 @@ const comprobarComida = () => {
     });
 }
 
-const aumentarVelocidad = () => {
-    //Si el incrementador esta activado
-    if(increase == true){
-        //Cada multiplo de 3 bajaremos 6 puntos la velocidad
-        if(contadorVecesComida % 2 == 0 && velocidadSnake > 40){
-            velocidadSnake-=4;
-        }
-    }
+//Funcion para volver al punto inicial de la partida
+const resetear = () => {
+
     clearInterval(timer);
-    velocidadSnake--;
-    timer = setInterval(() => mover(teclasPulsadas[teclasPulsadas.length - 1]), velocidadSnake);
+    if (sound) {
+        audioChoque.play();
+    }
+    contTablero.classList.add("choqueSerpiente");
+    
+    setTimeout(() => {
+        
+        cambiarAlerta();
+        velocidadesSerpiente();
+        borrarSerpiente();
+        generarSerpiente();
+        teclasPulsadas = ["ArrowRight"];
+        longitudSnake = 10;
+        contadorVecesComida = 0;
+        puntuacion.textContent = ("00" + contadorVecesComida);
+        contTablero.classList.remove("choqueSerpiente");
+    }, 3000)
 }
 
+
+//Funcion para aumentar la serpiente una celula mas cuando come.
 const aumentarSerpiente = () => {
+
     let celulaNueva = document.createElement("DIV");
     celulaNueva.classList.add("colorCuerpo");
     celulaNueva.style.gridArea = celulas[celulas.length - 1].style.gridArea;
     contTablero.appendChild(celulaNueva);
 }
 
+
 //Funcion para validar movimientos. Validamos que la flecha se puede pulsar
 //Por ejemplo si estamos yendo a la derecha, no se puede ir hacia la
 //izquierda directamente. Tendrias que ir arriba o abajo primero.
 const validaMovimiento = (teclapulsada) => {
+
     if ((teclapulsada == "ArrowRight" || teclapulsada == "ArrowLeft") && (teclasPulsadas.slice(-1) == "ArrowUp" || teclasPulsadas.slice(-1) == "ArrowDown")) {
         teclasPulsadas.push(teclapulsada);
 
@@ -207,33 +353,44 @@ const validaMovimiento = (teclapulsada) => {
     }
 }
 
+
+//Funcion para dar una nueva posicion al alimento. 
 const moverAlimento = (alimento) => {
+
     do {
-        startAliRow = Math.floor(Math.random() * 31);
-        startAliColumn = Math.floor(Math.random() * 60);
+        startAliRow = Math.floor(Math.random() * 30) + 1;
+        startAliColumn = Math.floor(Math.random() * 60) + 2;
         alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + (startAliRow + 1) + "/" + (startAliColumn - 1);
     } while (celulas.some((celula) => alimento.style.gridArea == celula.style.gridArea))
 }
 
+
 //Tenemos que crear este que es igual que el de arriba pero cambia la condicion porque cuando se usa
 // darPosicionAlimento aun no se ha creado el array de celulas
 const darPosicionAlimento = (alimento) => {
+
     do {
-        startAliRow = Math.floor(Math.random() * 31);
-        startAliColumn = Math.floor(Math.random() * 60);
+        startAliRow = Math.floor(Math.random() * 30) + 1;
+        startAliColumn = Math.floor(Math.random() * 60) + 2;
         alimento.style.gridArea = startAliRow + "/" + startAliColumn + "/" + (startAliRow + 1) + "/" + (startAliColumn - 1);
-    } while (alimento.style.gridArea == 0 / 0 / 0 / 0)
+    } while (alimento.style.startRow == 23)
 }
 
+
+//Para parar el juego manualmente
 const cambiarAlertaManual = (event) => {
+
     if (event.keyCode == 32) {
         cambiarAlerta();
     }
 }
 
-const   cambiarAlerta = () => {
+//funcion para mostrar u ocultar  el mensaje de alerta
+const cambiarAlerta = () => {
+
     if (play) {
-        let tiene = alert.classList.toggle("desaparecer");
+
+        let tiene = alert.classList.toggle("desaparecer"); //Si esta en medio de la partida tiene=false, else tiene=true
         if (!tiene) {
             clearInterval(timer);
         } else {
@@ -243,17 +400,14 @@ const   cambiarAlerta = () => {
 }
 
 const añadirMovimiento = (event) => {
+
     validaMovimiento(event.key);
 }
 
-const efectosIniciales = () => {
-    img_principal.style.transform = "scale(17)";  // En tres segundos desde el dom la imagen aumenta
-    setTimeout(() => { intro.style.opacity = "0" }, 1500); // En 4,5 segundos desde el dom la imagen se empieza a desvaneces
-    setTimeout(() => { intro.style.display = "none" }, 3500);
-    ajusteElegir.style.display = "none";
-}
 
+//Funcion para crear los alimentos que hayamos indicado
 const generarAlimentos = () => {
+
     numAlimentos = maxAlimentoInput.value;
     let fragment = document.createDocumentFragment();
     for (let i = 0; i < numAlimentos; i++) {
@@ -266,97 +420,77 @@ const generarAlimentos = () => {
     contTablero.insertBefore(fragment, contTablero.firstElementChild);
 }
 
-const eliminarAlimentos = () => {
-    alimentos.forEach((alimento) => {
-        alimento.remove();
-    });
-}
 
-const velocidadesSerpiente = () => {
-    if(increase){
-        velocidadSnake = 130;
-    }else if(!increase){
-        velocidadSnake = speed;
-    }
-}
 
+
+//Funcion que comprueba si los ajustes necesarios para el juego se han seleccionado
+//Si es asi, carga los datos de configuracion y prepara el juego para ser jugado.
 const cargarConfiguracion = () => {
-    if ((sound!=null) && (increase!=null) && (speed!=null)) {
+
+    if ((sound!=null) && ((increase==true) || ((increase==false) && (speed!=null)))) {
+
+        generarSerpiente();
         generarAlimentos();
         velocidadesSerpiente();
+        quitarBotonesPulsados();
         configuracion.style.opacity = "0";
-        setTimeout(() => { configuracion.style.display = "none" }, 2000);
+        setTimeout(() => { configuracion.style.display = "none" }, 1000);
         play = true;
     }
 }
 
-const mostrarConfiguracion = () => {
-    eliminarAlimentos();
+
+//Funcion para que una vez cargados los ajustes los botones se queden sin marcar 
+//por si volvemos a la pantalla de ajustes
+const quitarBotonesPulsados = () => {
+    
+    [...ajustes.children].forEach((hijo, index) => {
+        if(index < 2) {
+
+            [...hijo.firstElementChild.nextElementSibling.children].forEach(boton => {
+                if(boton.classList.contains("active")){
+                    boton.classList.remove("active");
+                }
+            })
+        }
+    })
+    ajusteElegir.style.display = "none";
+}
+
+
+//Funcion para parar el juego y poner las variables de los ajustes a null.
+//Quita los botones marcados en los ajustes en la partida anterior.
+const volverConfiguracion = () => {
+
+    if(celulas.length!=0){borrarAlimentos()};
+    borrarSerpiente();
+
     if(alert.classList.contains("desaparecer")){
+
         cambiarAlerta();
     }
+
     play = false;
+    sound = null;
+    increase = null;
     
     configuracion.style.display = "flex";
     configuracion.style.opacity = "1";
 }
 
-const marcarOpcionAjustes = (event) => {
-    //Si marcamos uno se quita el otro
-    [...event.target.parentElement.children].forEach((hijo) => {
-        if(hijo.classList.contains("active") && hijo != event.target){
-            hijo.classList.remove("active");
-        }
-    });
 
-    //Cada vez que pulsamos se activa y se desactiva
-    if (event.target.nodeName == "BUTTON") {
-        event.target.classList.toggle("active");
-    }
 
-    //El elemento marcado en on le guardamos en una variable ya que no siempre es el event y lo evaluamos
-    let elementoSeleccionado;
-    [...event.target.parentElement.children].forEach((hijo) => {
-        if (hijo.classList.contains("active")) {
-            elementoSeleccionado = hijo;
-        }
-    })
 
-    if (elementoSeleccionado) {
-        switch (elementoSeleccionado.id) {
-            case "sound_on":
-                sound = true;
-                break;
-            case "sound_off":
-                sound = false;
-                break;
-            case "increase_on":
-                increase = true;
-                break;
-            case "increase_off":
-                increase = false
-                break;
-            case "slow":
-                speed = 140;
-                break;
-            case "medium":
-                speed = 110;
-                break;
-            case "fast":
-                speed = 80;
-                break;
-            case "super-fast":
-                speed = 40;
-                break;
 
-        }
-    }
-
-    if(increase_off.classList.contains("active")){
-        ajusteElegir.style.display = "flex";
-    }else {
-        ajusteElegir.style.display = "none";
-    }
-}
 
 document.addEventListener("DOMContentLoaded", efectosIniciales);
+document.addEventListener("keydown", ocultarVentana)
+configuracion.addEventListener("mousedown", marcarOpcionAjustes);
+playButton.addEventListener("mousedown", cargarConfiguracion);
+document.addEventListener("keydown", añadirMovimiento);
+backButton.addEventListener("mousedown", volverConfiguracion);
+document.addEventListener("keydown", cambiarAlertaManual);
+
+
+
+

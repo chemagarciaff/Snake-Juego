@@ -1,0 +1,31 @@
+He creado un juego clásico de Snake utilizando JavaScript, donde el objetivo es controlar una serpiente que se desplaza por el tablero, 
+comiendo alimentos para crecer sin chocar con las paredes o consigo misma. 
+
+Las unicas pantallas accesibles al juego son: configuracion y juego.
+
+Configuracion es la ventana que se abrira por defecto. Si no seleccionamos todos los ajustes, no podremos acceder al juego.
+
+Las diferentes opciones de ajuste son:
+- Sound: 
+	- "on" si queremos que el juego tenga sonido.
+	- "off" si queremos que no tenga sonido.
+
+- Increase speed (aumentar velocidad):
+	- "on": parte de una velocidad inicial y va aumentando segun comemos alimentos
+	- "off": se despliegua una nueva opcion para elegir la velocidad de la serpiente
+
+- Feed (alimento): parra indicar el numero de alimentos que queremos que se genere. El max del input es 100, pero
+realmente puedes poner el valor que quieras a mano.
+
+Una vez elegidas las opciones accedemos al juego pulsando "play".
+
+Para iniciar el juego pulsamos "space bar" o "barra espaciadora". En este momento la serpiente se empezará a mover y ya podremos dirigirla.
+Si queremos parar el juego podemos volver a pulsar "space bar" y el juego se detendrá. Podemos repetir esto las veces necesarias.
+
+Si pulsamos atras el juego termina y volveremos a la pantalla de ajustes y los ajustes anteriores se eliminaran. Podremos elegir de nuevo los
+ajustes que nos interesen.
+
+
+
+(IMPORTANTE: cuando das atras y vuelves a jugar, hay un error y la serpiente se crea dos veces. Para que funcione bien basta con chocarte y la partida funcionará
+correctamente. He intentado solucionarlo pero no encuentro el error)
