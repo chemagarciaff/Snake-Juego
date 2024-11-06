@@ -46,6 +46,7 @@ body{
     z-index: 10;
 
 
+<<<<<<< HEAD
     .img-principal{
         width: 45%;
         border: 6px solid var(--grisSecundario);
@@ -91,6 +92,12 @@ body{
     }
     100%{
         opacity: 1;
+=======
+    .img_principal{
+        width: 50px;
+        border: 1px solid black;
+        transition: transform 2s ease; /* Transición suave */
+>>>>>>> db67657c546f1970e9985b42aa8f77363ff00340
     }
 }
 

@@ -55,6 +55,7 @@ score.textContent = "000";
 //Funcion para generar los efectos iniciales de ampliacion de la imagen y desvanecimiento
 const efectosIniciales = () => {
 
+<<<<<<< HEAD
     intro_container.classList.add("zoomInicial");
     setTimeout(() => { press_enter.classList.add("parpadeo") }, 2500)
     
@@ -67,6 +68,14 @@ const ocultarVentana = (event) => {
     }
 }
 
+=======
+    img_principal.style.transform = "scale(17)";
+    setTimeout(() => { intro.style.opacity = "0" }, 2000);
+    setTimeout(() => { intro.style.display = "none" }, 3000);
+    ajusteElegir.style.display = "none";
+}
+
+>>>>>>> db67657c546f1970e9985b42aa8f77363ff00340
 
 //Funcion para controlar los ajustes seleccionados y dar el valor
 //correspondiente a las variables de sonido, velocidad y numero de alimentos
@@ -309,6 +318,7 @@ const comprobarComida = () => {
 //Funcion para volver al punto inicial de la partida
 const resetear = () => {
 
+<<<<<<< HEAD
     clearInterval(timer);
     if (sound) {
         audioChoque.play();
@@ -327,6 +337,19 @@ const resetear = () => {
         puntuacion.textContent = ("00" + contadorVecesComida);
         contTablero.classList.remove("choqueSerpiente");
     }, 3000)
+=======
+    if (sound) {
+        audioChoque.play();
+    }
+    cambiarAlerta();
+    velocidadesSerpiente();
+    borrarSerpiente();
+    generarSerpiente();
+    teclasPulsadas = ["ArrowRight"];
+    longitudSnake = 10;
+    contadorVecesComida = 0;
+    puntuacion.textContent = ("00" + contadorVecesComida);
+>>>>>>> db67657c546f1970e9985b42aa8f77363ff00340
 }
 
 
@@ -460,7 +483,11 @@ const quitarBotonesPulsados = () => {
 
 //Funcion para parar el juego y poner las variables de los ajustes a null.
 //Quita los botones marcados en los ajustes en la partida anterior.
+<<<<<<< HEAD
 const volverConfiguracion = () => {
+=======
+const mostrarConfiguracion = () => {
+>>>>>>> db67657c546f1970e9985b42aa8f77363ff00340
 
     if(celulas.length!=0){borrarAlimentos()};
     borrarSerpiente();
@@ -484,11 +511,18 @@ const volverConfiguracion = () => {
 
 
 document.addEventListener("DOMContentLoaded", efectosIniciales);
+<<<<<<< HEAD
 document.addEventListener("keydown", ocultarVentana)
 configuracion.addEventListener("mousedown", marcarOpcionAjustes);
 playButton.addEventListener("mousedown", cargarConfiguracion);
 document.addEventListener("keydown", añadirMovimiento);
 backButton.addEventListener("mousedown", volverConfiguracion);
+=======
+configuracion.addEventListener("mousedown", marcarOpcionAjustes);
+playButton.addEventListener("mousedown", cargarConfiguracion);
+document.addEventListener("keydown", añadirMovimiento);
+backButton.addEventListener("mousedown", mostrarConfiguracion);
+>>>>>>> db67657c546f1970e9985b42aa8f77363ff00340
 document.addEventListener("keydown", cambiarAlertaManual);
 
 
