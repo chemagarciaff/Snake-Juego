@@ -14,12 +14,8 @@ Las diferentes opciones de ajuste son:
 	- "on": parte de una velocidad inicial y va aumentando segun comemos alimentos
 	- "off": se despliegua una nueva opcion para elegir la velocidad de la serpiente
 
-<<<<<<< HEAD
 - Feed (alimento): parra indicar el numero de alimentos que queremos que se genere. El max del input es 100, pero
 realmente puedes poner el valor que quieras a mano.
-=======
-- Feed (alimento): parra indicar el numero de alimentos que queremos que se genere.
->>>>>>> db67657c546f1970e9985b42aa8f77363ff00340
 
 Una vez elegidas las opciones accedemos al juego pulsando "play".
 
@@ -29,10 +25,7 @@ Si queremos parar el juego podemos volver a pulsar "space bar" y el juego se det
 Si pulsamos atras el juego termina y volveremos a la pantalla de ajustes y los ajustes anteriores se eliminaran. Podremos elegir de nuevo los
 ajustes que nos interesen.
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> db67657c546f1970e9985b42aa8f77363ff00340
 (IMPORTANTE: cuando das atras y vuelves a jugar, hay un error y la serpiente se crea dos veces. Para que funcione bien basta con chocarte y la partida funcionará
 correctamente. He intentado solucionarlo pero no encuentro el error)
